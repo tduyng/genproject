@@ -41,6 +41,7 @@ pub enum Linter {
 impl Cli {
     /// Parse flags or fall back to interactive mode
     pub fn parse_or_interactive() -> Self {
+        println!("Welcome to the project generator!");
         let args = Cli::try_parse();
 
         match args {
@@ -74,6 +75,13 @@ pub struct InteractiveCli;
 impl InteractiveCli {
     pub fn run() -> Cli {
         use dialoguer::Select;
+
+        let project_name: String = Input::new()
+            .with_prompt("Enter the project name (default: new_project)")
+            .default("new_project".to_string())
+            .interact_text()
+            .expect("Failed to read input");
+
         let project_type = Select::new()
             .with_prompt("Select project type")
             .items(&["nodejs", "nestjs", "rust", "deno"])
@@ -83,7 +91,7 @@ impl InteractiveCli {
         let linter = match project_type {
             0 | 1 => Some(
                 Select::new()
-                    .with_prompt("Select linters")
+                    .with_prompt("Select linter")
                     .items(&["eslint", "biome"])
                     .interact()
                     .unwrap(),
@@ -91,17 +99,27 @@ impl InteractiveCli {
             _ => Some(0),
         };
 
-        let project_name: String = Input::new()
-            .with_prompt("Enter the project name")
-            .default("new_project".to_string())
-            .interact_text()
-            .unwrap();
-
         let output_path: String = Input::new()
             .with_prompt("Enter the output path (default: current directory)")
             .default(".".to_string())
             .interact_text()
             .unwrap();
+
+        println!("\nProject details:");
+        println!("  Project Name: {}", project_name);
+        println!("  Project Type: {}", project_type);
+        println!(
+            "   Selected Linter: {}",
+            match linter {
+                Some(0) => "eslint",
+                Some(1) => "biome",
+                _ => "eslint",
+            }
+        );
+        println!("  Output Path: {}", output_path);
+
+        // Confirm project creation
+        println!("\nCreating your project...");
 
         Cli {
             project_name,
