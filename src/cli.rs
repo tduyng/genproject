@@ -99,7 +99,7 @@ impl InteractiveCli {
             .interact_text()
             .expect("Failed to read input");
 
-        let project_types = vec!["nodejs", "nestjs", "rust", "deno"];
+        let project_types = vec!["nodejs", "nestjs", "deno"];
         let selected_index = Select::with_theme(&theme)
             .with_prompt("Select project type")
             .items(&project_types)

@@ -1,0 +1,72 @@
+{
+    "author": "YourName <your-email@email.com> (https://github.com/your-github)",
+    "name": "project-name",
+    "description": "",
+    "version": "0.0.1",
+    "homepage": "http://github.com/your-github/project-name",
+    "keywords": [],
+    "maintainers": [],
+    "engines": {
+        "node": ">=18"
+    },
+    "repository": {
+        "type": "git",
+        "url": "http://github.com/your-github/project-name.git"
+    },
+    "bugs": {
+        "url": "http://github.com/your-github/project-name.git"
+    },
+    "type": "module",
+    "files": [
+        "/lib",
+        "/bin"
+    ],
+    "main": "lib/esm/index.js",
+    "types": "lib/esm/index.d.ts",
+    "exports": {
+        ".": {
+            "import": {
+                "default": "./lib/esm/index.js",
+                "types": "./lib/esm/index.d.ts"
+            },
+            "require": {
+                "default": "./lib/cjs/index.js",
+                "types": "./lib/cjs/index.d.ts"
+            }
+        }
+    },
+    "license": "MIT",
+    "scripts": {
+        "lint": "biome check --write",
+        "check": "biome check",
+        "build": "tsx scripts/build.ts",
+        "test": "mocha 'tests/**/*.[tj]s'",
+        "coverage": "c8 -r=cobertura -r=lcov -r=text-summary npm run test",
+        "benchmark": "tsx ./benchmark/benchmark.ts",
+        "benchmark-deno": "deno -A --unstable-sloppy-imports ./benchmark/benchmark.ts",
+        "benchmark-bun": "bun ./benchmark/benchmark.ts",
+        "changelog": "conventional-changelog -p conventionalcommits -r -u 0",
+        "examples": "tsx ./examples/example.ts",
+        "postinstall": "git config core.hooksPath ./.githooks || true"
+    },
+    "bin": {
+        "x": "./bin/x.js"
+    },
+    "dependencies": {
+        "commander": "12.x"
+    },
+    "devDependencies": {
+        "@biomejs/biome": "1.9.4",
+        "@types/node": "^22.7.9",
+        "c8": "^10.1.2",
+        "columnify": "^1.6.0",
+        "commitlint": "^19.5.0",
+        "conventional-changelog-cli": "^5.0.0",
+        "mocha": "^10.7.3",
+        "prettyjson": "^1.2.5",
+        "prettyoutput": "^1.2.0",
+        "tsx": "^4.19.1",
+        "typescript": "^5.6.3"
+    },
+    "packageManager": "yarn@4.5.1"
+}
