@@ -22,6 +22,10 @@ pub struct Cli {
     #[arg(short, long, value_enum)]
     pub linter: Option<Linter>,
 
+    /// Test framework to include
+    #[arg(long, value_enum)]
+    pub test_framework: Option<TestFramework>,
+
     /// Enable interactive mode
     #[arg(short, long)]
     pub interactive: bool,
@@ -39,11 +43,30 @@ pub enum Linter {
     Biome,
 }
 
+#[derive(ValueEnum, Clone)]
+pub enum TestFramework {
+    Jest,
+    MochaSinon,
+    NodeSinon,
+    Vitest,
+}
+
 impl std::fmt::Display for Linter {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         match self {
             Linter::Eslint => write!(f, "eslint"),
             Linter::Biome => write!(f, "biome"),
+        }
+    }
+}
+
+impl std::fmt::Display for TestFramework {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        match self {
+            TestFramework::Jest => write!(f, "jest"),
+            TestFramework::MochaSinon => write!(f, "mocha-sinon"),
+            TestFramework::NodeSinon => write!(f, "node-sinon"),
+            TestFramework::Vitest => write!(f, "vitest"),
         }
     }
 }
@@ -100,25 +123,39 @@ impl InteractiveCli {
             .expect("Failed to read input");
 
         let project_types = vec!["nodejs", "nestjs", "deno"];
-        let selected_index = Select::with_theme(&theme)
+        let project_type = project_types[Select::with_theme(&theme)
             .with_prompt("Select project type")
             .items(&project_types)
-            .interact()
-            .unwrap();
-        let project_type = project_types[selected_index].to_string();
-
-        let linters = vec!["eslint", "biome"];
-        let linter_index = Select::with_theme(&theme)
-            .with_prompt("Select linter")
-            .items(&linters)
             .default(0)
             .interact()
-            .expect("Failed to select linter");
-        let linter = match linter_index {
-            0 => Some(Linter::Eslint),
-            1 => Some(Linter::Biome),
-            _ => Some(Linter::Eslint),
-        };
+            .unwrap()]
+        .to_string();
+
+        let linter = Select::with_theme(&theme)
+            .with_prompt("Select linter")
+            .items(&["none", "eslint", "biome"])
+            .default(1)
+            .interact()
+            .ok()
+            .and_then(|i| match i {
+                1 => Some(Linter::Eslint),
+                2 => Some(Linter::Biome),
+                _ => None,
+            });
+
+        let test_framework = Select::with_theme(&theme)
+            .with_prompt("Select test framework")
+            .items(&["none", "jest", "vitest", "mocha-sinon", "node-sinon"])
+            .default(0)
+            .interact()
+            .ok()
+            .and_then(|i| match i {
+                1 => Some(TestFramework::Jest),
+                2 => Some(TestFramework::Vitest),
+                3 => Some(TestFramework::MochaSinon),
+                4 => Some(TestFramework::NodeSinon),
+                _ => None,
+            });
 
         let output_path: String = Input::with_theme(&theme)
             .with_prompt("Enter the output path (default: current directory)")
@@ -126,13 +163,20 @@ impl InteractiveCli {
             .interact_text()
             .unwrap();
 
-        print_project_info(&project_name, &project_type, &linter, &output_path);
+        print_project_info(
+            &project_name,
+            &project_type,
+            &linter,
+            &test_framework,
+            &output_path,
+        );
 
         Cli {
             project_name,
             output_path,
             project_type,
             linter,
+            test_framework,
             interactive: true,
         }
     }
@@ -142,6 +186,7 @@ pub fn print_project_info(
     project_name: &str,
     project_type: &str,
     linter: &Option<Linter>,
+    test_framework: &Option<TestFramework>,
     output_path: &str,
 ) {
     println!("{}", "\nProject details:".bold().blue());
@@ -150,8 +195,9 @@ pub fn print_project_info(
     println!("  Project type: {}", project_type.yellow());
     if let Some(linter) = linter {
         println!("  Linter: {}", linter.to_string().cyan());
-    } else {
-        println!("  Linter: {}", "eslint".cyan());
+    }
+    if let Some(test_framework) = test_framework {
+        println!("  Test framework: {}", test_framework.to_string().cyan());
     }
     println!("  Output path: {}", output_path.cyan());
     println!("\nCreating your project...");

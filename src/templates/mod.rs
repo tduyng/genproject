@@ -1,3 +1,2 @@
 pub mod copier;
-
-pub use copier::TemplateCopier;
+pub mod package;
