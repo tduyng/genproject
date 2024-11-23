@@ -1,0 +1,14 @@
+node_modules/
+docker/
+build/
+dist/
+lib/
+coverage/
+.idea/
+.vscode/
+.plateform/
+logs/
+temp/
+tmp/
+.cache/
+.history/

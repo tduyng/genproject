@@ -1,0 +1,14 @@
+{
+    "scripts": {
+        "format": "prettier --write \"src/**/*.ts\" \"test/**/*.ts\"",
+        "lint": "eslint \"{src,apps,libs,test}/**/*.ts\" --fix"
+    },
+    "devDependencies": {
+        "@eslint/js": "^9.15.0",
+        "@typescript-eslint/parser": "^8.15.0",
+        "eslint": "^9.15.0",
+        "eslint-plugin-import": "^2.31.0",
+        "prettier": "^3.3.3",
+        "typescript-eslint": "^8.15.0"
+    }
+}
