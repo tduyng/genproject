@@ -17,10 +17,6 @@ pub struct Cli {
     #[arg(short = 't', long, value_enum)]
     pub project_type: String,
 
-    /// Subtype options (e.g., js, ts)
-    #[arg(short, long, value_enum)]
-    pub subtype: Option<SubType>,
-
     /// Linters to include
     #[arg(short, long, value_enum)]
     pub linter: Option<Linter>,
@@ -74,16 +70,6 @@ impl InteractiveCli {
             .items(&["nodejs", "nestjs", "rust", "deno"])
             .interact()
             .unwrap();
-        let subtype = match project_type {
-            0 | 1 => Some(
-                Select::new()
-                    .with_prompt("Select subtype")
-                    .items(&["ts", "js"])
-                    .interact()
-                    .unwrap(),
-            ),
-            _ => Some(0),
-        };
 
         let linter = match project_type {
             0 | 1 => Some(
@@ -118,11 +104,6 @@ impl InteractiveCli {
                 3 => "deno".to_string(),
                 _ => unreachable!(),
             },
-            subtype: subtype.map(|s| match s {
-                0 => SubType::Ts,
-                1 => SubType::Js,
-                _ => unreachable!(),
-            }),
             linter: match linter {
                 Some(0) => Some(Linter::Eslint),
                 Some(1) => Some(Linter::Biome),
