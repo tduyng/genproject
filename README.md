@@ -20,11 +20,11 @@ A CLI tool to generate starter project templates for various programming environ
 
 To install and use this CLI tool, you can either compile it from source or install it via a package manager (if available).
 
-### Build from Source
+### Install from source
 
 ```bash
 # Clone the repository
-git clone https://github.com/yourusername/genproject.git
+git clone https://github.com/tduyng/genproject.git
 
 # Navigate to the project directory
 cd genproject
@@ -36,6 +36,14 @@ cargo build --release
 ```
 
 ---
+
+### Install from Git
+
+To build the project directly from a Git repository, you can use the following steps:
+
+```bash
+cargo install --git https://github.com/tduyng/genproject.git
+```
 
 ## Usage
 
@@ -57,7 +65,7 @@ genproject [OPTIONS]
 | `-n, --project-name <NAME>`    | Set the name of the project. Default: `new_project`.                                                      | `--project-name my_project`                 |
 | `-t, --project-type <TYPE>`    | Specify the type of project to generate. Options include `nodejs`, `nestjs`, `rust`.                    | `--project-type nodejs`                     |
 | `--output-path <PATH>`         | Set the directory where the project should be created. Default is the current directory (`.`).           | `--output-path /path/to/projects`           |
-| `--linter <LINTER>`            | Include a linter in the project. Available linters: `eslint,`, `biome`.                          | `--linter EslintPrettier`                   |
+| `--linter <LINTER>`            | Include a linter in the project. Available linters: `eslint,`, `biome`.                          | `--linter eslint`                   |
 | `-i, --interactive`            | Enable interactive mode for guided setup.                                                               | `--interactive`                             |
 | `-h, --help`                   | Display help information about the CLI.                                                                  | `genproject -h`                             |
 | `-V, --version`                | Display the version of the CLI.                                                                          | `genproject -V`                             |
