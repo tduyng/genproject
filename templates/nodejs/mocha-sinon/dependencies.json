@@ -1,0 +1,12 @@
+{
+    "devDependencies": {
+        "@types/sinon": "^17.0.3",
+        "@types/mocha": "^10.0.6",
+        "@types/node": "^22.9.3",
+        "@types/on-finished": "^2.3.4",
+        "c8": "^10.1.2",
+        "mocha": "^11.0.0",
+        "mocha-param": "^2.0.1",
+        "sinon": "^19.0.2"
+    }
+}

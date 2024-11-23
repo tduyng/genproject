@@ -1,1 +1,0 @@
-# NESTJS + ESLINT
