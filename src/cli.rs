@@ -6,7 +6,7 @@ use dialoguer::Input;
 #[derive(Parser)]
 #[command(author, version, about)]
 pub struct Cli {
-    /// Name of the project
+    /// Name of the project (default: new_project)
     #[arg(short = 'n', long, default_value = "new_project")]
     pub project_name: String,
 
@@ -14,15 +14,15 @@ pub struct Cli {
     #[arg(short, long, default_value = ".")]
     pub output_path: String,
 
-    /// Type of project to generate
-    #[arg(short = 't', long, value_enum, default_value = "nodejs")]
+    /// Type of project to generate (nodejs, nestjs, deno)
+    #[arg(short = 't', long, value_enum)]
     pub project_type: String,
 
-    /// Linters to include
+    /// Linters to include (eslint, biome)
     #[arg(short, long, value_enum)]
     pub linter: Option<Linter>,
 
-    /// Test framework to include
+    /// Test framework to include (jest, vitest, mocha-sinon, node-sinon)
     #[arg(long, value_enum)]
     pub test_framework: Option<TestFramework>,
 
