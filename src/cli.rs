@@ -1,4 +1,5 @@
 use clap::{Parser, ValueEnum};
+use colored::Colorize;
 use dialoguer::Input;
 
 /// CLI for generating starter project templates
@@ -41,7 +42,11 @@ pub enum Linter {
 impl Cli {
     /// Parse flags or fall back to interactive mode
     pub fn parse_or_interactive() -> Self {
-        println!("Welcome to the project generator!");
+        println!(
+            "{}",
+            "\nWelcome to the project generator!".bold().bright_green()
+        );
+
         let args = Cli::try_parse();
 
         match args {
@@ -74,68 +79,65 @@ pub struct InteractiveCli;
 
 impl InteractiveCli {
     pub fn run() -> Cli {
-        use dialoguer::Select;
+        use dialoguer::{theme::ColorfulTheme, Select};
+        let theme = ColorfulTheme::default();
 
-        let project_name: String = Input::new()
-            .with_prompt("Enter the project name (default: new_project)")
+        let project_name: String = Input::with_theme(&theme)
+            .with_prompt("Enter the project name")
             .default("new_project".to_string())
             .interact_text()
             .expect("Failed to read input");
 
-        let project_type = Select::new()
+        let project_types = vec!["nodejs", "nestjs", "rust", "deno"];
+        let selected_index = Select::with_theme(&theme)
             .with_prompt("Select project type")
-            .items(&["nodejs", "nestjs", "rust", "deno"])
+            .items(&project_types)
             .interact()
             .unwrap();
+        let project_type = project_types[selected_index].to_string();
 
-        let linter = match project_type {
-            0 | 1 => Some(
-                Select::new()
-                    .with_prompt("Select linter")
-                    .items(&["eslint", "biome"])
-                    .interact()
-                    .unwrap(),
-            ),
-            _ => Some(0),
+        let linters = vec!["eslint", "biome"];
+        let linter_index = Select::with_theme(&theme)
+            .with_prompt("Select linter")
+            .items(&linters)
+            .default(0)
+            .interact()
+            .expect("Failed to select linter");
+        let linter = match linter_index {
+            0 => Some(Linter::Eslint),
+            1 => Some(Linter::Biome),
+            _ => Some(Linter::Eslint),
         };
 
-        let output_path: String = Input::new()
+        let output_path: String = Input::with_theme(&theme)
             .with_prompt("Enter the output path (default: current directory)")
             .default(".".to_string())
             .interact_text()
             .unwrap();
 
-        println!("\nProject details:");
-        println!("  Project Name: {}", project_name);
-        println!("  Project Type: {}", project_type);
-        println!(
-            "   Selected Linter: {}",
-            match linter {
-                Some(0) => "eslint",
-                Some(1) => "biome",
-                _ => "eslint",
-            }
-        );
-        println!("  Output Path: {}", output_path);
+        println!("{}", "\nProject details:".bold().blue());
 
-        // Confirm project creation
-        println!("\nCreating your project...");
+        println!("  Project Name: {}", project_name.green());
+        println!("  Project Type: {}", project_type.yellow());
+        println!(
+            "  Selected Linter: {}",
+            linter
+                .clone()
+                .map_or("None", |l| match l {
+                    Linter::Eslint => "eslint",
+                    Linter::Biome => "biome",
+                })
+                .magenta()
+        );
+        println!("  Output Path: {}", output_path.cyan());
+
+        println!("{}", "\nCreating your project...");
 
         Cli {
             project_name,
             output_path,
-            project_type: match project_type {
-                0 => "nodejs".to_string(),
-                1 => "nestjs".to_string(),
-                2 => "rust".to_string(),
-                3 => "deno".to_string(),
-                _ => unreachable!(),
-            },
-            linter: match linter {
-                Some(0) => Some(Linter::Eslint),
-                Some(1) => Some(Linter::Biome),
-                _ => None,
-            },
+            project_type,
+            linter,
             interactive: true,
         }
     }
