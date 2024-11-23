@@ -39,12 +39,23 @@ pub enum Linter {
     Biome,
 }
 
+impl std::fmt::Display for Linter {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        match self {
+            Linter::Eslint => write!(f, "eslint"),
+            Linter::Biome => write!(f, "biome"),
+        }
+    }
+}
+
 impl Cli {
     /// Parse flags or fall back to interactive mode
     pub fn parse_or_interactive() -> Self {
         println!(
             "{}",
-            "\nWelcome to the project generator!".bold().bright_green()
+            "\nWelcome to the project generator!\n"
+                .bold()
+                .bright_green()
         );
 
         let args = Cli::try_parse();
@@ -115,23 +126,7 @@ impl InteractiveCli {
             .interact_text()
             .unwrap();
 
-        println!("{}", "\nProject details:".bold().blue());
-
-        println!("  Project Name: {}", project_name.green());
-        println!("  Project Type: {}", project_type.yellow());
-        println!(
-            "  Selected Linter: {}",
-            linter
-                .clone()
-                .map_or("None", |l| match l {
-                    Linter::Eslint => "eslint",
-                    Linter::Biome => "biome",
-                })
-                .magenta()
-        );
-        println!("  Output Path: {}", output_path.cyan());
-
-        println!("{}", "\nCreating your project...");
+        print_project_info(&project_name, &project_type, &linter, &output_path);
 
         Cli {
             project_name,
@@ -141,4 +136,23 @@ impl InteractiveCli {
             interactive: true,
         }
     }
+}
+
+pub fn print_project_info(
+    project_name: &str,
+    project_type: &str,
+    linter: &Option<Linter>,
+    output_path: &str,
+) {
+    println!("{}", "\nProject details:".bold().blue());
+
+    println!("  Project name: {}", project_name.green());
+    println!("  Project type: {}", project_type.yellow());
+    if let Some(linter) = linter {
+        println!("  Linter: {}", linter.to_string().cyan());
+    } else {
+        println!("  Linter: {}", "eslint".cyan());
+    }
+    println!("  Output path: {}", output_path.cyan());
+    println!("\nCreating your project...");
 }
