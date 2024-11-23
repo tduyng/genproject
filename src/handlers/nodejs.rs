@@ -5,7 +5,7 @@ pub fn handle_nodejs(cli: crate::cli::Cli) {
     let template_dir = match cli.linter {
         Some(Linter::Eslint) => "templates/nodejs/eslint",
         Some(Linter::Biome) => "templates/nodejs/biome",
-        _ => "templates/nodejs/eslint",
+        _ => "templates/nodejs/eslint/other",
     };
     let output_dir = PathBuf::from(&cli.output_path).join(&cli.project_name);
     let copier = TemplateCopier::new(

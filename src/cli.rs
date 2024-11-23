@@ -14,7 +14,7 @@ pub struct Cli {
     pub output_path: String,
 
     /// Type of project to generate
-    #[arg(short = 't', long, value_enum)]
+    #[arg(short = 't', long, value_enum, default_value = "nodejs")]
     pub project_type: String,
 
     /// Linters to include
@@ -51,6 +51,15 @@ impl Cli {
                     cli
                 }
             }
+
+            Err(e)
+                if e.kind() == clap::error::ErrorKind::DisplayHelp
+                    || e.kind() == clap::error::ErrorKind::DisplayVersion =>
+            {
+                e.print().expect("Failed to display help/version");
+                std::process::exit(0);
+            }
+
             Err(e) => {
                 eprintln!("Error: {e}");
                 std::process::exit(1);
@@ -75,7 +84,7 @@ impl InteractiveCli {
             0 | 1 => Some(
                 Select::new()
                     .with_prompt("Select linters")
-                    .items(&["eslint+prettier", "biome"])
+                    .items(&["eslint", "biome"])
                     .interact()
                     .unwrap(),
             ),
