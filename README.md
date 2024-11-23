@@ -157,14 +157,28 @@ When using `--interactive`, the CLI will guide you through a series of questions
 
 ```bash
 $ genproject --interactive
-Select project type:
-> nodejs
-  nestjs
-  rust
-  deno
-Select linters:
-> eslint
-  biome
-Enter the project name: new_project
-Enter the output path (default: current directory): .
+Welcome to the project generator!  
+
+Welcome to the project generator!
+✔ Enter the project name · new_project
+
+? Select project type: 
+  ◯ nodejs             
+  ◯ nestjs
+  ◉ rust
+  ◯ deno              
+
+? Select linter: 
+  ◯ eslint
+  ◉ biome
+
+? Enter the output path (default: current directory):  .
+  
+Project details:  
+Project Name: new_project
+Selected Project Type: rust
+Selected Linter: Biome
+Output Path: .
+
+Creating your project...
 ```
