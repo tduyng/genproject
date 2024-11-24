@@ -14,9 +14,9 @@ pub struct Cli {
     #[arg(short, long, default_value = ".")]
     pub output_path: String,
 
-    /// Type of project to generate [possible values: nestjs, nodejs, deno]
+    /// Type of project to generate
     #[arg(short = 't', long, value_enum, default_value = "nodejs")]
-    pub project_type: String,
+    pub project_type: ProjectType,
 
     /// Linters to include
     #[arg(short, long, value_enum)]
@@ -29,6 +29,13 @@ pub struct Cli {
     /// Enable interactive mode
     #[arg(short, long, conflicts_with_all = &["project_name", "output_path", "project_type", "linter", "test_framework"])]
     pub interactive: bool,
+}
+
+#[derive(ValueEnum, Clone, Debug)]
+pub enum ProjectType {
+    Nodejs,
+    Nestjs,
+    Deno,
 }
 
 #[derive(ValueEnum, Clone, Debug)]
@@ -49,6 +56,16 @@ pub enum TestFramework {
     MochaSinon,
     NodeSinon,
     Vitest,
+}
+
+impl std::fmt::Display for ProjectType {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        match self {
+            ProjectType::Nodejs => write!(f, "nodejs"),
+            ProjectType::Nestjs => write!(f, "nestjs"),
+            ProjectType::Deno => write!(f, "deno"),
+        }
+    }
 }
 
 impl std::fmt::Display for Linter {
@@ -122,14 +139,19 @@ impl InteractiveCli {
             .interact_text()
             .expect("Failed to read input");
 
-        let project_types = vec!["nodejs", "nestjs", "deno"];
-        let project_type = project_types[Select::with_theme(&theme)
+        let project_type = Select::with_theme(&theme)
             .with_prompt("Select project type")
-            .items(&project_types)
+            .items(&["nodejs", "nestjs", "deno"])
             .default(0)
             .interact()
-            .unwrap()]
-        .to_string();
+            .ok()
+            .map(|i| match i {
+                0 => ProjectType::Nodejs,
+                1 => ProjectType::Nestjs,
+                2 => ProjectType::Deno,
+                _ => ProjectType::Nodejs,
+            })
+            .unwrap_or(ProjectType::Nodejs);
 
         let linter = Select::with_theme(&theme)
             .with_prompt("Select linter")
@@ -178,7 +200,7 @@ pub fn print_project_info(cli: &Cli) {
     println!("{}", "\nProject details:".bold().blue());
 
     println!("  Project name: {}", cli.project_name.green());
-    println!("  Project type: {}", cli.project_type.yellow());
+    println!("  Project type: {}", cli.project_type.to_string().yellow());
     if let Some(ref linter) = cli.linter {
         println!("  Linter: {}", linter.to_string().cyan());
     }
