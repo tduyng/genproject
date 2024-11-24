@@ -5,6 +5,7 @@
     "author": "",
     "private": true,
     "license": "UNLICENSED",
+    "type": "module",
     "scripts": {
         "build": "nest build",
         "start": "nest start",
@@ -24,7 +25,6 @@
         "@nestjs/testing": "^10.4.8",
         "@types/express": "^5.0.0",
         "@types/node": "^22.9.3",
-        "prettier": "^3.3.3",
         "source-map-support": "^0.5.21",
         "ts-loader": "^9.5.1",
         "ts-node": "^10.9.2",

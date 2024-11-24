@@ -2,11 +2,11 @@
     "devDependencies": {
         "@types/sinon": "^17.0.3",
         "@types/mocha": "^10.0.6",
-        "@types/node": "^22.9.3",
-        "@types/on-finished": "^2.3.4",
         "c8": "^10.1.2",
-        "mocha": "^11.0.0",
+        "expect": "^29.7.0",
+        "mocha": "^10.8.2",
         "mocha-param": "^2.0.1",
-        "sinon": "^19.0.2"
+        "sinon": "^19.0.2",
+        "ts-node": "^10.9.2"
     }
 }

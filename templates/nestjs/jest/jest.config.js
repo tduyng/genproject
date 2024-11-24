@@ -1,4 +1,4 @@
-module.exports = {
+export default {
     "moduleFileExtensions": [
         "js",
         "json",
@@ -6,8 +6,13 @@ module.exports = {
     ],
     "rootDir": "src",
     "testRegex": ".*\\.spec\\.ts$",
-    "transform": {
-        "^.+\\.(t|j)s$": "ts-jest"
+    transform: {
+        '^.+\\.(t|j)s$': [
+            'ts-jest',
+            {
+                isolatedModules: true, //Disable type-checking
+            },
+        ],
     },
     "collectCoverageFrom": [
         "**/*.(t|j)s"
