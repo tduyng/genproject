@@ -3,7 +3,7 @@ use std::path::Path;
 use crate::cli::Cli;
 use crate::templates::{copier::TemplateCopier, package::Package};
 
-pub fn handle_project(cli: Cli) {
+pub fn handle_project(cli: &Cli) {
     let output_dir = format!("{}/{}", cli.output_path, cli.project_name);
     std::fs::create_dir_all(&output_dir).expect("Failed to create project directory");
 

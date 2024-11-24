@@ -5,7 +5,10 @@ use std::{collections::HashMap, fs};
 pub struct Package {
     #[serde(flatten)]
     other_fields: HashMap<String, serde_json::Value>,
+
+    pub scripts: Option<HashMap<String, String>>,
     pub dependencies: Option<HashMap<String, String>>,
+
     #[serde(rename = "devDependencies")]
     pub dev_dependencies: Option<HashMap<String, String>>,
 }
@@ -17,12 +20,14 @@ impl Package {
     }
 
     pub fn merge_with(&mut self, other: &Package) {
-        self.merge_dependencies("dependencies", &other.dependencies);
-        self.merge_dependencies("devDependencies", &other.dev_dependencies);
+        self.merge_fields("scripts", &other.scripts);
+        self.merge_fields("dependencies", &other.dependencies);
+        self.merge_fields("devDependencies", &other.dev_dependencies);
     }
 
-    fn merge_dependencies(&mut self, field: &str, other_deps: &Option<HashMap<String, String>>) {
+    fn merge_fields(&mut self, field: &str, other_deps: &Option<HashMap<String, String>>) {
         let self_deps = match field {
+            "scripts" => self.scripts.get_or_insert_with(HashMap::new),
             "dependencies" => self.dependencies.get_or_insert_with(HashMap::new),
             "devDependencies" => self.dev_dependencies.get_or_insert_with(HashMap::new),
             _ => panic!("Unknown field: {}", field),

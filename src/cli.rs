@@ -3,47 +3,47 @@ use colored::Colorize;
 use dialoguer::Input;
 
 /// CLI for generating starter project templates
-#[derive(Parser)]
+#[derive(Parser, Clone, Debug)]
 #[command(author, version, about)]
 pub struct Cli {
-    /// Name of the project (default: new_project)
+    /// Name of the project
     #[arg(short = 'n', long, default_value = "new_project")]
     pub project_name: String,
 
-    /// Path to create the project (default: current directory)
+    /// Path to create the project
     #[arg(short, long, default_value = ".")]
     pub output_path: String,
 
-    /// Type of project to generate (nodejs, nestjs, deno)
-    #[arg(short = 't', long, value_enum)]
+    /// Type of project to generate [possible values: nestjs, nodejs, deno]
+    #[arg(short = 't', long, value_enum, default_value = "nodejs")]
     pub project_type: String,
 
-    /// Linters to include (eslint, biome)
+    /// Linters to include
     #[arg(short, long, value_enum)]
     pub linter: Option<Linter>,
 
-    /// Test framework to include (jest, vitest, mocha-sinon, node-sinon)
+    /// Test framework to include
     #[arg(long, value_enum)]
     pub test_framework: Option<TestFramework>,
 
     /// Enable interactive mode
-    #[arg(short, long)]
+    #[arg(short, long, conflicts_with_all = &["project_name", "output_path", "project_type", "linter", "test_framework"])]
     pub interactive: bool,
 }
 
-#[derive(ValueEnum, Clone)]
+#[derive(ValueEnum, Clone, Debug)]
 pub enum SubType {
     Js,
     Ts,
 }
 
-#[derive(ValueEnum, Clone)]
+#[derive(ValueEnum, Clone, Debug)]
 pub enum Linter {
     Eslint,
     Biome,
 }
 
-#[derive(ValueEnum, Clone)]
+#[derive(ValueEnum, Clone, Debug)]
 pub enum TestFramework {
     Jest,
     MochaSinon,
@@ -74,17 +74,17 @@ impl std::fmt::Display for TestFramework {
 impl Cli {
     /// Parse flags or fall back to interactive mode
     pub fn parse_or_interactive() -> Self {
-        println!(
-            "{}",
-            "\nWelcome to the project generator!\n"
-                .bold()
-                .bright_green()
-        );
-
         let args = Cli::try_parse();
 
         match args {
             Ok(cli) => {
+                println!(
+                    "{}",
+                    "\nWelcome to the project generator!\n"
+                        .bold()
+                        .bright_green()
+                );
+
                 if cli.interactive {
                     InteractiveCli::run()
                 } else {
@@ -163,14 +163,6 @@ impl InteractiveCli {
             .interact_text()
             .unwrap();
 
-        print_project_info(
-            &project_name,
-            &project_type,
-            &linter,
-            &test_framework,
-            &output_path,
-        );
-
         Cli {
             project_name,
             output_path,
@@ -182,23 +174,17 @@ impl InteractiveCli {
     }
 }
 
-pub fn print_project_info(
-    project_name: &str,
-    project_type: &str,
-    linter: &Option<Linter>,
-    test_framework: &Option<TestFramework>,
-    output_path: &str,
-) {
+pub fn print_project_info(cli: &Cli) {
     println!("{}", "\nProject details:".bold().blue());
 
-    println!("  Project name: {}", project_name.green());
-    println!("  Project type: {}", project_type.yellow());
-    if let Some(linter) = linter {
+    println!("  Project name: {}", cli.project_name.green());
+    println!("  Project type: {}", cli.project_type.yellow());
+    if let Some(ref linter) = cli.linter {
         println!("  Linter: {}", linter.to_string().cyan());
     }
-    if let Some(test_framework) = test_framework {
+    if let Some(ref test_framework) = cli.test_framework {
         println!("  Test framework: {}", test_framework.to_string().cyan());
     }
-    println!("  Output path: {}", output_path.cyan());
+    println!("  Output path: {}", cli.output_path.cyan());
     println!("\nCreating your project...");
 }
