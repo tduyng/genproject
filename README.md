@@ -1,9 +1,9 @@
 
-# genproject
+# STARTER KIT CLI
 
-## Project Generator CLI
+## Starter Kit Generator CLI
 
-A CLI tool to generate starter project templates for various programming environments (e.g., Node.js, NestJS, Rust, Deno). It supports custom project configurations via flags, with an optional interactive mode for guided setup.
+A CLI tool to generate starter project templates for various programming environments (e.g., Node.js, NestJS, Deno). It supports custom project configurations via flags, with an optional interactive mode for guided setup.
 
 ---
 
@@ -24,15 +24,15 @@ To install and use this CLI tool, you can either compile it from source or insta
 
 ```bash
 # Clone the repository
-git clone https://github.com/tduyng/genproject.git
+git clone https://github.com/tduyng/starterkit-cli.git
 
 # Navigate to the project directory
-cd genproject
+cd starterkit
 
 # Build the project using Cargo
 cargo build --release
 
-# The binary will be located in target/release/genproject
+# The binary will be located in target/release/starterkit
 ```
 
 ---
@@ -42,7 +42,7 @@ cargo build --release
 To build the project directly from a Git repository, you can use the following steps:
 
 ```bash
-cargo install --git https://github.com/tduyng/genproject.git
+cargo install --git https://github.com/tduyng/starterkit-cli.git
 ```
 
 ## Usage
@@ -55,7 +55,7 @@ The CLI supports several flags for creating projects with different configuratio
 ### General Syntax
 
 ```bash
-genproject [OPTIONS]
+starterkit [OPTIONS]
 ```
 
 ### Flags
@@ -67,8 +67,8 @@ genproject [OPTIONS]
 | `--output-path <PATH>`         | Set the directory where the project should be created. Default is the current directory (`.`).           | `--output-path /path/to/projects`           |
 | `--linter <LINTER>`            | Include a linter in the project. Available linters: `eslint,`, `biome`.                          | `--linter eslint`                   |
 | `-i, --interactive`            | Enable interactive mode for guided setup.                                                               | `--interactive`                             |
-| `-h, --help`                   | Display help information about the CLI.                                                                  | `genproject -h`                             |
-| `-V, --version`                | Display the version of the CLI.                                                                          | `genproject -V`                             |
+| `-h, --help`                   | Display help information about the CLI.                                                                  | `starterkit -h`                             |
+| `-V, --version`                | Display the version of the CLI.                                                                          | `starterkit -V`                             |
 
 ---
 
@@ -79,7 +79,7 @@ genproject [OPTIONS]
 Generate a Node.js project with the name `my_node_project` in the current directory:
 
 ```bash
-genproject --project-name my_node_project --project-type nodejs
+starterkit --project-name my_node_project --project-type nodejs
 ```
 
 This will create a project named `my_node_project` using the default settings for a Node.js project (Typescript + Eslint)
@@ -89,7 +89,7 @@ This will create a project named `my_node_project` using the default settings fo
 Generate a Rust project with the name `my_rust_project`, including the `Biome` linter, and specify the output directory as `/projects/rust`:
 
 ```bash
-genproject --project-name my_rust_project --project-type rust --linter biome --output-path /projects/rust
+starterkit --project-name my_rust_project --project-type rust --linter biome --output-path /projects/rust
 ```
 
 This will create a Rust project with `biome` configured as the linter in the specified directory.
@@ -99,7 +99,7 @@ This will create a Rust project with `biome` configured as the linter in the spe
 If you prefer a guided setup, you can use the interactive mode. This will prompt you for the project name, type, and additional settings:
 
 ```bash
-genproject --interactive
+starterkit --interactive
 ```
 
 You will be prompted with a series of questions like:
@@ -164,7 +164,7 @@ This project is licensed under the MIT License. See the [LICENSE](LICENSE) file 
 When using `--interactive`, the CLI will guide you through a series of questions, like so:
 
 ```bash
-$ genproject --interactive
+$ starterkit --interactive
 Welcome to the project generator!  
 
 Welcome to the project generator!
