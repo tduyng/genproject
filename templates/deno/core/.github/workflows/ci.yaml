@@ -1,0 +1,30 @@
+name: CI
+
+on: [push, pull_request]
+
+jobs:
+  tests:
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Deno
+        uses: denoland/setup-deno@v2
+        with:
+            deno-version: v2.x
+
+      - name: Check linter
+        run: deno lint
+
+      - name: Run tests with coverage
+        run: deno test --coverage
+
+      - name: Build the project
+        run: deno task build
+
+      - name: Upload coverage to Coveralls
+        uses: coverallsapp/github-action@v2
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
