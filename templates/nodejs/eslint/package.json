@@ -1,4 +1,12 @@
 {
+    "scripts": {
+        "eslint": "eslint \"{src,tests}/**/*.ts\" --fix",
+        "eslint:check": "eslint \"{src,tests}/**/*.ts\"",
+        "prettier": "prettier --write .",
+        "prettier:check": "prettier --check .",
+        "lint": "npm run eslint && npm run prettier",
+        "check": "npm run eslint:check && npm run prettier:check"
+    },
     "devDependencies": {
         "@eslint/js": "^9.15.0",
         "@typescript-eslint/parser": "^8.15.0",

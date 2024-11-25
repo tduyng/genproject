@@ -40,8 +40,6 @@
         "lint": "biome check --write",
         "check": "biome check",
         "build": "tsx scripts/build.ts",
-        "test": "mocha 'tests/**/*.[tj]s'",
-        "coverage": "c8 -r=cobertura -r=lcov -r=text-summary npm run test",
         "postinstall": "git config core.hooksPath ./.githooks || true"
     },
     "bin": {

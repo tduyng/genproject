@@ -1,4 +1,8 @@
 {
+    "scripts": {
+        "test": "mocha 'tests/unit/**/*.test.ts'",
+        "coverage": "c8 -r=cobertura -r=lcov -r=text-summary npm run test"
+    },
     "devDependencies": {
         "@types/sinon": "^17.0.3",
         "@types/mocha": "^10.0.6",

@@ -1,6 +1,13 @@
 {
+    "scripts": {
+        "test": "node --require ts-node/register/transpile-only --test 'tests/unit/**/*.test.ts'",
+        "coverage": "c8 -r=cobertura -r=lcov -r=text-summary npm run test"
+    },
     "devDependencies": {
+        "c8": "^10.1.2",
+        "expect": "^29.7.0",
         "@types/sinon": "^17.0.3",
-        "sinon": "^19.0.2"
+        "sinon": "^19.0.2",
+        "ts-node": "^10.9.2"
     }
 }
